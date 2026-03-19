@@ -1,4 +1,4 @@
 interface:
-  display_name: "Structured Roundtable"
-  short_description: "多视角圆桌：主 agent 主持、子 agent 讨论、标准模板总结"
-  default_prompt: "Use $ljg-roundtable with gpt-5.4 high to automatically find relevant domain experts, run a moderator-led roundtable without role-play, optionally use subagents, and end with a standard summary template."
+  display_name: "Expert Roundtable"
+  short_description: "真实专家圆桌：自动选专家，必要时多 agent，输出形态由 agent 决定"
+  default_prompt: "Use $ljg-roundtable to select real domain experts, optionally run gpt-5.4 high subagents, avoid role-play, and synthesize the topic in the best structure for the task."

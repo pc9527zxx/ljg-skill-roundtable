@@ -1,109 +1,60 @@
 # ljg-skill-roundtable
 
-结构化圆桌讨论 skill，现已改成更适合 Codex / ChatGPT 的单入口、多视角、标准模板输出形式，并默认自动寻找相关领域专家，不走戏剧化角色扮演。
+一个更像“专家技能”而不是“角色扮演提示词”的圆桌 skill。
 
-## 现在的交互方式
+它的目标不是把讨论写得热闹，而是把问题讲深：自动找相关专家、控制 panel 质量、必要时并行综合、最后给出高质量判断。
+
+## 这个 skill 现在怎么工作
 
 - 用户只在主 Codex CLI 提问
-- 主 agent 负责拆题、自动找相关领域专家、主持、阶段总结和最终总结
-- 只有当用户明确要求“多 agent / 并行讨论”时，主 agent 才在后台协调子 agent
-- 当前默认模型策略：可控时统一优先使用 `gpt-5.4` + `high`
-- 默认先在对话里输出标准模板；如需留档，再写入工作区 `outputs/roundtables/`
+- 主 agent 自动寻找相关真实专家、机构或学派
+- 默认不做戏剧化角色扮演，只做高可信专家观点综合
+- 只有用户明确要求多 agent / 并行讨论时，才显式 spawn subagent
+- 显式 subagent 默认必须使用 `gpt-5.4` + `high`
+- 输出格式默认由 agent 自己决定；只有用户明确要求固定模板时，才套模板
 
-## 功能
+## 适合的场景
 
-- 根据议题自动选择 3-5 位相关领域专家、研究者、从业者或代表性学派，覆盖多元立场
-- 支持主 agent + 子 agent 的圆桌编排，也支持单 agent 同模板降级
-- 每轮输出固定结构：本轮问题、代表性发言、核心分歧、ASCII 框架图、下一层问题
-- 结束时输出标准化终局总结：立场地图、关键洞见、未决问题、知识网络
-- 全程以专家观点总结与分析性转述为主，不做戏剧化“扮演某人”
+- 战略问题
+- 技术 / 架构问题
+- 产品路线和平台设计
+- 争议议题的多视角分析
+- 需要专家分歧和综合判断的问题
 
-## 使用方式
-
-核心 skill 位于 `skills/ljg-roundtable/`。
-
-可以直接用自然语言触发：
+## 触发示例
 
 ```text
-用多 agent 圆桌讨论：人工智能是否拥有真正的创造力？
 圆桌会议 自由意志是否存在？
-你当主持人，自动找几个相关领域专家讨论“自由意志是否存在？”，最后按标准模板总结。
-请用标准 roundtable 模板比较“开源 AI 与闭源 AI 的长期创新效率”。
-自动找相关领域专家来开圆桌会议，不要角色扮演。
+圆桌会议 用多agent讨论这个问题。
+圆桌会议 如何设计一个长期可持续的平台？
+自动找相关专家来讨论这个问题，不要角色扮演。
 ```
 
 如果你的环境支持显式 skill 调用，也可以这样说：
 
 ```text
-Use $ljg-roundtable to run a structured roundtable on whether AGI should be open source.
-Use $ljg-roundtable with gpt-5.4 high for the main agent and all subagents.
-```
-
-## 讨论中的控制指令
-
-| 指令 | 含义 |
-|------|------|
-| `可` | 接受下一层问题，继续推进 |
-| `止` | 结束讨论，进入终局总结 |
-| `深入此节` | 围绕当前核心分歧继续深挖 |
-| `引入新专家：姓名` | 指定一位新专家或新视角加入 |
-| `只看总结` | 跳过后续轮次，直接生成终局总结 |
-
-## 标准输出骨架
-
-```text
-【主持】圆桌已启动
-- 议题：...
-- 目标：...
-- 方法：多 agent 并行讨论 + 主持人收束总结
-
-【主持】本次参与专家
-- Agent A｜...
-- Agent B｜...
-- Agent C｜...
-
-==================================================
-第 1 轮｜定义问题
-==================================================
-
-【主持】本轮问题
-...
-
-【专家视角：Agent A】【陈述】
-...
-
-**简言之**：...
-
-【主持】本轮阶段总结
-- 核心分歧：...
-- 当前共识：...
-
-    立场 A <------ 张力轴 ------> 立场 B
-       |                              |
-    论点 A                         论点 B
-
-【主持】下一层问题
-...
-
-##################################################
-终局总结｜{topic}
-##################################################
+Use $ljg-roundtable to analyze this topic with relevant real experts.
+Use $ljg-roundtable with gpt-5.4 high subagents and real domain experts.
 ```
 
 ## 仓库结构
 
 - `skills/ljg-roundtable/SKILL.md`：主技能说明
-- `skills/ljg-roundtable/agents/openai.yaml`：Codex / ChatGPT 侧 UI 元数据
-- `skills/ljg-roundtable/references/multi-agent-workflow.md`：主 agent / 子 agent 编排说明
-- `skills/ljg-roundtable/references/discussion-format.md`：标准模板与 ASCII 模板
+- `skills/ljg-roundtable/agents/openai.yaml`：UI 元数据与默认 prompt
+- `skills/ljg-roundtable/references/preflight-gate.md`：开始前的硬检查
+- `skills/ljg-roundtable/references/expert-selection.md`：专家选择规则
+- `skills/ljg-roundtable/references/subagent-contract.md`：多 agent 执行契约
+- `skills/ljg-roundtable/references/output-modes.md`：仅在用户要求模板时使用
 
 ## 设计原则
 
-- **求真 > 和谐**：允许尖锐交锋，不追求表面一致
-- **挖深不铺广**：每轮只追一条最深的裂缝
-- **单入口体验**：用户只和主持人对话，不管理子 agent
-- **模板化收口**：阶段总结和终局总结都走固定模板
-- **专家优先**：自动找相关领域专家，基于公开立场做总结性讨论
+- 专家优先，不用泛角色凑 panel
+- 议题优先，不复用某个领域的固定明星 panel
+- 不只报名字，要介绍专家是谁、为何相关、会怎么观察问题
+- 执行强约束，输出弱约束
+- 不角色扮演，只做高可信综合
+- 需要并行时再并行，不为热闹而 spawn
+- 多 agent 时锁定 `gpt-5.4` + `high`
 
 ## License
 
