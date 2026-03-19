@@ -1,6 +1,6 @@
 # Multi-Agent Workflow
 
-在 Codex / ChatGPT 风格的使用方式里，圆桌讨论采用“前台单入口，后台多 agent”的结构。
+在 Codex / ChatGPT 风格的使用方式里，圆桌讨论采用“前台单入口，后台多 agent”的结构。默认先自动寻找相关领域专家，再围绕这些专家的已知观点做分析性讨论，而不是戏剧化扮演。
 
 ## Single-Entry Principle
 
@@ -13,6 +13,12 @@
 - 仅在用户明确要求多 agent、并行讨论、子 agent、delegate 或 parallel 工作时显式启动子 agent。
 - 如果用户没有明确要求，或环境不适合显式多 agent，则保持单 agent 主持模式，并沿用同样的模板。
 
+## Model and Reasoning Defaults
+
+- 主 agent 如可控，优先使用 `gpt-5.4`，`reasoning_effort: high`。
+- 所有显式子 agent 默认统一使用 `gpt-5.4`，`reasoning_effort: high`。
+- 除非用户明确要求更快/更省，或当前环境不支持该配置，不要自行降级。
+
 ## Role Split
 
 ### 主 agent
@@ -22,19 +28,21 @@
 - 决定本轮只追哪个核心分歧。
 - 为子 agent 下发任务卡。
 - 合并观点，输出结构化阶段总结与终局总结。
+- 如显式启动子 agent，创建时显式指定 `model: gpt-5.4` 与 `reasoning_effort: high`。
 
 ### 子 agent
 
-- 只代表一个人物或一个明确视角。
+- 只负责一个专家卡或一个明确视角。
 - 只回应当前问题与指定的前文要点。
 - 只输出本轮内容，不越级给出最终结论。
+- 用分析性转述总结专家立场，不用第一人称扮演。
 
 ## Task Card Template
 
 给每个子 agent 的任务卡至少包含：
 
 ```text
-你代表：{人物名 / 视角名}
+你负责的专家卡：{专家名 / 机构 / 视角名}
 身份：{身份}
 代表作或代表观点：{work_or_view}
 核心立场：{stance}
@@ -46,7 +54,7 @@
 - 不替其他 agent 归纳全局结论
 - 不脱离当前问题长篇扩写
 输出格式：
-【{人物名}】【{动作}】：{2-4 句高密度回应}
+【专家视角：{专家名}】【{动作}】：{2-4 句高密度回应}
 
 **简言之**：{一句话}
 - 关键前提：{premise}

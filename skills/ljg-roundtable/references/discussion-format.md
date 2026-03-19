@@ -1,6 +1,6 @@
 # Discussion Format
 
-使用固定模板输出，让 roundtable 在主 Codex CLI 里更稳定、更易读，也更容易在结束后直接总结或落盘。
+使用固定模板输出，让 roundtable 在主 Codex CLI 里更稳定、更易读，也更容易在结束后直接总结或落盘。默认自动匹配相关领域专家，并以分析性转述呈现观点，不做戏剧化扮演。
 
 ## Opening Template
 
@@ -15,7 +15,7 @@
   3. 允许尖锐反驳，但必须给出理由
   4. 每位代表结尾都要给一句“简言之”
 
-【主持】本次参与代表
+【主持】本次参与专家
 - Agent A｜{name}｜身份：{identity}｜立场：{stance}｜为何入选：{reason}
 - Agent B｜{name}｜身份：{identity}｜立场：{stance}｜为何入选：{reason}
 - Agent C｜{name}｜身份：{identity}｜立场：{stance}｜为何入选：{reason}
@@ -35,7 +35,7 @@
 【主持】本轮问题
 {guiding_question}
 
-【Agent A / 人物名】【陈述】
+【专家视角：Agent A / 专家名】【陈述】
 {content}
 
 **简言之**：{one_line_takeaway}
@@ -43,7 +43,7 @@
 - 攻击点：{target}
 - 风险/盲点：{risk}
 
-【Agent B / 人物名】【质疑】
+【专家视角：Agent B / 专家名】【质疑】
 {content}
 
 **简言之**：{one_line_takeaway}
@@ -51,7 +51,7 @@
 - 攻击点：{target}
 - 风险/盲点：{risk}
 
-【Agent C / 人物名】【补充 / 反驳 / 修正 / 综合】
+【专家视角：Agent C / 专家名】【补充 / 反驳 / 修正 / 综合】
 {content}
 
 **简言之**：{one_line_takeaway}
@@ -60,7 +60,7 @@
 - 风险/盲点：{risk}
 ```
 
-建议把单段发言控制在 120-220 个中文字符，避免臃肿。
+建议把单段发言控制在 120-220 个中文字符，避免臃肿。写法应是“基于该专家观点的分析性转述”，而不是戏剧对白。
 
 ## Moderator Summary Template
 
@@ -134,7 +134,7 @@
 【主持】你可以继续：
 - `可`：进入下一轮
 - `深入此节`：继续咬住这一分歧
-- `引入新人物：{name}`：加入新视角
+- `引入新专家：{name}`：加入新视角
 - `只看总结`：跳到终局模板
 - `止`：结束并生成终局总结
 ```

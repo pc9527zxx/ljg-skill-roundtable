@@ -1,20 +1,22 @@
 # ljg-skill-roundtable
 
-结构化圆桌讨论 skill，现已改成更适合 Codex / ChatGPT 的单入口、多视角、标准模板输出形式。
+结构化圆桌讨论 skill，现已改成更适合 Codex / ChatGPT 的单入口、多视角、标准模板输出形式，并默认自动寻找相关领域专家，不走戏剧化角色扮演。
 
 ## 现在的交互方式
 
 - 用户只在主 Codex CLI 提问
-- 主 agent 负责拆题、选角、主持、阶段总结和最终总结
+- 主 agent 负责拆题、自动找相关领域专家、主持、阶段总结和最终总结
 - 只有当用户明确要求“多 agent / 并行讨论”时，主 agent 才在后台协调子 agent
+- 当前默认模型策略：可控时统一优先使用 `gpt-5.4` + `high`
 - 默认先在对话里输出标准模板；如需留档，再写入工作区 `outputs/roundtables/`
 
 ## 功能
 
-- 根据议题自动选择 3-5 位真实历史/当代人物，覆盖多元立场
+- 根据议题自动选择 3-5 位相关领域专家、研究者、从业者或代表性学派，覆盖多元立场
 - 支持主 agent + 子 agent 的圆桌编排，也支持单 agent 同模板降级
 - 每轮输出固定结构：本轮问题、代表性发言、核心分歧、ASCII 框架图、下一层问题
 - 结束时输出标准化终局总结：立场地图、关键洞见、未决问题、知识网络
+- 全程以专家观点总结与分析性转述为主，不做戏剧化“扮演某人”
 
 ## 使用方式
 
@@ -25,14 +27,16 @@
 ```text
 用多 agent 圆桌讨论：人工智能是否拥有真正的创造力？
 圆桌会议 自由意志是否存在？
-你当主持人，找几个代表人物辩论“自由意志是否存在？”，最后按标准模板总结。
+你当主持人，自动找几个相关领域专家讨论“自由意志是否存在？”，最后按标准模板总结。
 请用标准 roundtable 模板比较“开源 AI 与闭源 AI 的长期创新效率”。
+自动找相关领域专家来开圆桌会议，不要角色扮演。
 ```
 
 如果你的环境支持显式 skill 调用，也可以这样说：
 
 ```text
 Use $ljg-roundtable to run a structured roundtable on whether AGI should be open source.
+Use $ljg-roundtable with gpt-5.4 high for the main agent and all subagents.
 ```
 
 ## 讨论中的控制指令
@@ -42,7 +46,7 @@ Use $ljg-roundtable to run a structured roundtable on whether AGI should be open
 | `可` | 接受下一层问题，继续推进 |
 | `止` | 结束讨论，进入终局总结 |
 | `深入此节` | 围绕当前核心分歧继续深挖 |
-| `引入新人物：姓名` | 指定一位新人物或新视角加入 |
+| `引入新专家：姓名` | 指定一位新专家或新视角加入 |
 | `只看总结` | 跳过后续轮次，直接生成终局总结 |
 
 ## 标准输出骨架
@@ -53,7 +57,7 @@ Use $ljg-roundtable to run a structured roundtable on whether AGI should be open
 - 目标：...
 - 方法：多 agent 并行讨论 + 主持人收束总结
 
-【主持】本次参与代表
+【主持】本次参与专家
 - Agent A｜...
 - Agent B｜...
 - Agent C｜...
@@ -65,7 +69,7 @@ Use $ljg-roundtable to run a structured roundtable on whether AGI should be open
 【主持】本轮问题
 ...
 
-【Agent A】【陈述】
+【专家视角：Agent A】【陈述】
 ...
 
 **简言之**：...
@@ -90,7 +94,6 @@ Use $ljg-roundtable to run a structured roundtable on whether AGI should be open
 
 - `skills/ljg-roundtable/SKILL.md`：主技能说明
 - `skills/ljg-roundtable/agents/openai.yaml`：Codex / ChatGPT 侧 UI 元数据
-- `skills/ljg-roundtable/references/original-prompt.org`：原始设计底稿
 - `skills/ljg-roundtable/references/multi-agent-workflow.md`：主 agent / 子 agent 编排说明
 - `skills/ljg-roundtable/references/discussion-format.md`：标准模板与 ASCII 模板
 
@@ -100,6 +103,7 @@ Use $ljg-roundtable to run a structured roundtable on whether AGI should be open
 - **挖深不铺广**：每轮只追一条最深的裂缝
 - **单入口体验**：用户只和主持人对话，不管理子 agent
 - **模板化收口**：阶段总结和终局总结都走固定模板
+- **专家优先**：自动找相关领域专家，基于公开立场做总结性讨论
 
 ## License
 
