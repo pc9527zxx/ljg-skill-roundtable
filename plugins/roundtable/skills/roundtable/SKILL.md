@@ -1,5 +1,5 @@
 ---
-name: ljg-roundtable
+name: roundtable
 description: 专家圆桌讨论技能：当用户要求“圆桌讨论”“圆桌会议”“多 agent 讨论”“找几种立场一起分析”“让不同专家讨论后总结”“structured debate”“roundtable”时使用。默认自动寻找与议题最相关的真实专家、研究者、从业者、机构或代表性学派，基于其公开工作和长期观点做高可信分析，不做戏剧化角色扮演。若用户明确要求多 agent / 并行讨论，则主 agent 必须按严格的专家选择与 subagent 配置规则执行。
 ---
 
